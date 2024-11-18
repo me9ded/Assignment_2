@@ -11,7 +11,7 @@ public abstract class AmazonCredit{
 	
 	@Override
 	public String toString(){
-		String ret="Credit: Type";
+		String ret="Credit Type:" + CreditType.values()[(int)this.value].toString();
 		return ret;
 	}
 
