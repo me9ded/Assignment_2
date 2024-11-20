@@ -1,4 +1,5 @@
 package amazon;
-interface AmazonPayable {
-    void boolean pay(float);
+
+interface Payable {
+    void pay(AmazonCredit credit);
 }

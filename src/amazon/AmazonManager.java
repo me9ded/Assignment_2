@@ -145,7 +145,8 @@ public class AmazonManager {
         String name = scanner.nextLine();
         System.out.print("Enter customer address: ");
         String address = scanner.nextLine();
-        customers.add(new AmazonCustomer(id, name, address));
+        AmazonCustomer Az = null;
+        customers.add(Az.createAmazonCustomer(id, name, address));
         System.out.println("Customer added successfully.");
     }
 

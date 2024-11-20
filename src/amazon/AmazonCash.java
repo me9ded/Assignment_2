@@ -1,27 +1,15 @@
 package amazon;
-public class AmazonCash extends AmazonCredit{
-	private CreditType ct;
-	private AmazonCash(float amount) {
-		super(amount);
-		this.ct=ct;
-		
+public class AmazonCash extends AmazonCredit {
+
+	// Constructor
+	public AmazonCash(float value) {
+		super(CreditType.CASH, value);
 	}
 
-	public AmazonCash createCash(String[] data) {
-		if(data.length > 2) {
-			return null;
-		}
-		if(data[1].isBlank()) {
-			return null;
-		}
-		AmazonCash ac=new AmazonCash(Float.parseFloat(data[1]));
-		return ac;
-	}
-
+	// Override toString to display cash information
 	@Override
 	public String toString() {
-		String ret="Credit : " + ct.Cash + getValue();
-		return ret;
+		return "Credit Type: CASH, Value: $" + value;
 	}
-
 }
+
