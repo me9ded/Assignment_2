@@ -1,14 +1,15 @@
 package amazon;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.*;
+
 
 public class AmazonManager {
     private ArrayList<AmazonProduct> products = new ArrayList<>();
     private ArrayList<AmazonCustomer> customers = new ArrayList<>();
-    private ArrayList<AmazonProduct> wishlists = new ArrayList<>();
-    private ArrayList<AmazonCart> carts = new ArrayList<>();
-    private ArrayList<String> comments = new ArrayList<>();
     private Scanner scanner = new Scanner(System.in);
+    private static final int NUMCOLS = 10;
+
 
     public static void main(String[] args) {
         AmazonManager manager = new AmazonManager();
@@ -137,11 +138,28 @@ public class AmazonManager {
 
     }
 
-    private void loadProductList() {
-        // Example of loading products
-        products.add(new AmazonProduct(1, "Laptop", "Electronics", 1200.00));
-        products.add(new AmazonProduct(2, "Headphones", "Electronics", 150.00));
-        System.out.println("Product list loaded successfully.");
+    public void loadProductList() throws AmazonException, FileNotFoundException{
+        System.out.println("Input the file name");
+        String local_temp=scanner.nextLine();
+        FileReader fl= new FileReader(local_temp);
+        try (BufferedReader br=new BufferedReader(fl)){
+            String line=br.readLine();
+            String[] title = line.split(",");
+            while((line=br.readLine()) != null) {
+                String[] temp=AmazonProductUtil.lineReader(line);
+                if(temp.length==NUMCOLS) {
+                    AmazonProduct product =AmazonProduct.createAmazonProduct(temp);
+                    products.add(product);
+                }
+            }
+
+        }catch(FileNotFoundException e) {
+            throw new AmazonException("Error file not found");
+
+        }catch(IOException ae) {
+            throw new AmazonException("Error in reading the file");
+        }
+        System.out.println("Loading product list...");
     }
 
     private void showProductList() {
@@ -172,13 +190,14 @@ public class AmazonManager {
 
     private void addCustomer() {
         System.out.print("Enter customer ID: ");
-        int id = Integer.parseInt(scanner.nextLine());
+        String item =scanner.nextLine();
         System.out.print("Enter customer name: ");
         String name = scanner.nextLine();
         System.out.print("Enter customer address: ");
         String address = scanner.nextLine();
+        String[] data= {item,name,address};
         AmazonCustomer Az = null;
-        customers.add(Az.createAmazonCustomer(id, name, address));
+        customers.add(Az.createAmazonCustomer(data));
         System.out.println("Customer added successfully.");
     }
 
@@ -222,5 +241,4 @@ public class AmazonManager {
         System.out.println("Customer not found.");
     }
 
-    // Other methods for wishlist, cart, and comments can follow a similar pattern.
 }

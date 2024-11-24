@@ -9,8 +9,8 @@ public class AmazonCustomer {
     private String address;
     private List<String> credits = new ArrayList<>();
     private List<Integer> wishList = new ArrayList<>();
-    private List<CartItem> cart = new ArrayList<>();
-    private List<Comment> comments = new ArrayList<>();
+    private List<AmazonComment> comments = new ArrayList<>();
+    private List<AmazonCartItem> cart = new ArrayList<>();
 
     private AmazonCustomer(int id, String name, String address) {
         this.id = id;
@@ -18,14 +18,14 @@ public class AmazonCustomer {
         this.address = address;
     }
 
-    public static AmazonCustomer createAmazonCustomer(List<String> data) {
-        if (data == null || data.size() < 3) {
+    public static AmazonCustomer createAmazonCustomer(String[] data) {
+        if (data == null || data.length < 3) {
             throw new IllegalArgumentException("Invalid data provided");
         }
 
-        int id = Integer.parseInt(data.get(0));
-        String name = data.get(1).trim();
-        String address = data.get(2).trim();
+        int id = Integer.parseInt(data[0]);
+        String name = data[1].trim();
+        String address = data[2].trim();
 
         return new AmazonCustomer(id, name, address);
     }
@@ -56,6 +56,7 @@ public class AmazonCustomer {
     }
 
     public void removeProductFromWishList(int productId) {
+
         wishList.remove(Integer.valueOf(productId));
     }
 
@@ -67,15 +68,16 @@ public class AmazonCustomer {
         }
     }
 
-    public void addItemInCart(int productId, int quantity) {
-        if (quantity <= 0) {
+    public void addItemInCart(AmazonCartItem item) {
+        if (item.getQuantity() <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
         }
-        cart.add(new CartItem(productId, quantity));
+        cart.add(new AmazonCartItem());
     }
 
     public void removeProductFromCart(int productId) {
-        cart.removeIf(item -> item.getProductId() == productId);
+
+        cart.removeIf(item -> item.getProduct().getId() == productId);
     }
 
     public void showCart() {
@@ -97,11 +99,11 @@ public class AmazonCustomer {
         }
     }
 
-    public void addComment(int productId, String commentText, float rating) {
+    public void addComment(AmazonComment comment) {
         if (rating < 0 || rating > 5) {
             throw new IllegalArgumentException("Rating must be between 0 and 5");
         }
-        comments.add(new Comment(productId, commentText, rating));
+        comments.add(comment);
     }
 
     public void showComments() {
@@ -117,43 +119,8 @@ public class AmazonCustomer {
         return "Customer ID: " + id + ", Name: " + name + ", Address: " + address;
     }
 
-    private static class CartItem {
-        private int productId;
-        private int quantity;
 
-        public CartItem(int productId, int quantity) {
-            this.productId = productId;
-            this.quantity = quantity;
-        }
 
-        public int getProductId() {
-            return productId;
-        }
 
-        public int getQuantity() {
-            return quantity;
-        }
 
-        @Override
-        public String toString() {
-            return "Product ID: " + productId + ", Quantity: " + quantity;
-        }
-    }
-
-    private static class Comment {
-        private int productId;
-        private String text;
-        private float rating;
-
-        public Comment(int productId, String text, float rating) {
-            this.productId = productId;
-            this.text = text;
-            this.rating = rating;
-        }
-
-        @Override
-        public String toString() {
-            return "Product ID: " + productId + ", Comment: " + text + ", Rating: " + rating;
-        }
-    }
 }

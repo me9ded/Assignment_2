@@ -20,7 +20,7 @@ public class AmazonProductUtil{
             return 0.0f;
         }
 	}
-	public String[] lineReader(String string) {
+	public static String[] lineReader(String string) {
 	    String[] str = new String[NUMCOLS];
 	    int index = 0;
 	    final char chComma = ',';

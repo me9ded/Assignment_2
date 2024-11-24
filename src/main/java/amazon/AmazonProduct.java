@@ -40,11 +40,10 @@ public class AmazonProduct extends AmazonProductUtil{
     	float k=convertStrToFloat(data[9].replace(",","" ));
     	AmazonProduct temp=new AmazonProduct(a,b,c,d,e,f,g,h,j,k);
     	return temp;
-    	
-    	
-    	
-    	
+
     }
+
+
     public static void setTitle(String[] csvTitle) {
         title = csvTitle;
     }

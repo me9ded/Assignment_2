@@ -3,19 +3,35 @@ public class AmazonCartItem {
     private AmazonProduct product;
     private int quantity;
 
-    public AmazonCartItem(AmazonProduct ap, int b){
+    public AmazonCartItem(AmazonProduct ap, int b) {
         this.product = ap;
         this.quantity = b;
     }
-    public float calcSubTotal(){
+
+    public float calcSubTotal() {
         float subTotal = 0;
-        subTotal=product.getDiscountPrice();
+        subTotal = product.getDiscountPrice();
         return subTotal;
     }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public AmazonProduct getProduct() {
+        return product;
+    }
+
+    public void setProduct(AmazonProduct product) {
+        this.product = product;
+    }
+
     @Override
     public String toString() {
-        String ret="";
-        ret="The sub total is" + calcSubTotal() ;
-        return ret;
+        return "Product ID: " + product.getId() + ", Quantity: " + quantity;
     }
 }
