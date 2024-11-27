@@ -28,10 +28,13 @@ public class AmazonProduct extends AmazonProductUtil{
 		this.actualPrice = actualPrice;
     }
     public static AmazonProduct createAmazonProduct(String[] data){
+        if(data.length < 10){
+            return null;
+        }
     	int a=Integer.parseInt(data[0]);
     	String b=data[1];
     	AmazonProductCategory c=new AmazonProductCategory(data[2]);
-    	AmazonProductSubCategory d= new AmazonProductSubCategory(data[3],this.category);
+    	AmazonProductSubCategory d= new AmazonProductSubCategory(data[3],c);
     	String e=data[4];
     	String f=data[5];
     	float g=Float.parseFloat(data[6]);

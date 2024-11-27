@@ -1,6 +1,6 @@
 package amazon;
 public class AmazonCheck extends AmazonCredit{
-    private CreditType creditType;
+    private PaymentType creditType;
     private String accountNumber;
 
     private AmazonCheck(String accountNumber, float amount) {
@@ -23,7 +23,7 @@ public class AmazonCheck extends AmazonCredit{
     @Override
     public String toString() {
         String ret="";
-        ret="Credit Type" + creditType + "Account Number" + accountNumber;
+        ret=" Check Number " + accountNumber + " Check balance: " + getValue();
         return ret;
     }
 }

@@ -1,5 +1,4 @@
 package amazon;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,8 +6,8 @@ public class AmazonCustomer {
     private int id;
     private String name;
     private String address;
-    private List<String> credits = new ArrayList<>();
-    private List<Integer> wishList = new ArrayList<>();
+    private List<AmazonCredit> credits = new ArrayList<>();
+    private List<AmazonProduct> wishList = new ArrayList<>();
     private List<AmazonComment> comments = new ArrayList<>();
     private List<AmazonCartItem> cart = new ArrayList<>();
 
@@ -18,9 +17,14 @@ public class AmazonCustomer {
         this.address = address;
     }
 
-    public static AmazonCustomer createAmazonCustomer(String[] data) {
-        if (data == null || data.length < 3) {
-            throw new IllegalArgumentException("Invalid data provided");
+    public static AmazonCustomer createAmazonCustomer(String[] data){
+        for (int i = 0; i < data.length; i++) {
+            if(data[i].isBlank()) {
+                return null;
+            }
+        }
+        if (data.length !=3) {
+            return null;
         }
 
         int id = Integer.parseInt(data[0]);
@@ -34,12 +38,6 @@ public class AmazonCustomer {
         return id;
     }
 
-    public void addCredit(String type, float amount) {
-        if (amount <= 0 || (!type.equalsIgnoreCase("cash") && !type.equalsIgnoreCase("check") && !type.equalsIgnoreCase("card"))) {
-            throw new IllegalArgumentException("Invalid credit type or amount");
-        }
-        credits.add(type + ": $" + amount);
-    }
 
     public void showCredits() {
         if (credits.isEmpty()) {
@@ -49,15 +47,14 @@ public class AmazonCustomer {
         }
     }
 
-    public void addProductInWishList(int productId) {
-        if (!wishList.contains(productId)) {
-            wishList.add(productId);
+    public void addProductInWishList(AmazonProduct product) {
+        if (!wishList.contains(product)) {
+            wishList.add(product);
         }
     }
 
     public void removeProductFromWishList(int productId) {
-
-        wishList.remove(Integer.valueOf(productId));
+        wishList.removeIf(product -> product.getId() == productId);
     }
 
     public void showWishList() {
@@ -72,11 +69,10 @@ public class AmazonCustomer {
         if (item.getQuantity() <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
         }
-        cart.add(new AmazonCartItem());
+        cart.add(new AmazonCartItem(item.getProduct(), item.getQuantity()));
     }
 
     public void removeProductFromCart(int productId) {
-
         cart.removeIf(item -> item.getProduct().getId() == productId);
     }
 
@@ -94,16 +90,33 @@ public class AmazonCustomer {
             System.out.println("Insufficient credit. Payment failed.");
         } else {
             System.out.println("Payment successful. Moving products to comments.");
-            cart.forEach(item -> comments.add(new Comment(item.getProductId(), "Purchased successfully", 5.0f)));
             cart.clear();
         }
     }
 
+    public void addCredit(AmazonCredit credit) {
+        if (credit.getValue() <= 0) {
+            throw new IllegalArgumentException("Credit amount must be greater than zero.");
+        }
+
+        String paymentType = String.valueOf(credit.getPaymentType());
+        if (paymentType == null) {
+            throw new IllegalArgumentException("Invalid payment type: " + paymentType);
+        }
+
+        credits.add(credit);
+        System.out.println("Credit added successfully: " + credit.getValue());
+    }
+
     public void addComment(AmazonComment comment) {
-        if (rating < 0 || rating > 5) {
+        if (comment.getRating() < 0 || comment.getRating() > 5) {
             throw new IllegalArgumentException("Rating must be between 0 and 5");
         }
-        comments.add(comment);
+        if (comment != null) {
+            comments.add(comment);
+        } else {
+            throw new IllegalArgumentException("Comment is null");
+        }
     }
 
     public void showComments() {
@@ -119,8 +132,40 @@ public class AmazonCustomer {
         return "Customer ID: " + id + ", Name: " + name + ", Address: " + address;
     }
 
+    public List<AmazonComment> getComments() {
+        return comments;
+    }
+    public List<AmazonCartItem> getCart() {
+        return cart;
+    }
+
+    public List<AmazonProduct> getWishList() {
+        return wishList;
+    }
+
+    public int getNumberOfCredits() {
+        return credits.size();
+    }
 
 
+    public int getWishlistSize() {
+        return wishList.size();
+    }
 
+    public int getNumberOfComments() {
+        return comments.size();
+    }
 
+    public int getCartSize() {
+        return cart.size();
+    }
+
+    public List<AmazonCredit> getCredits() {
+        return credits;
+    }
+
+    public void setCredits(List<AmazonCredit> credits) {
+        this.credits = credits;
+    }
 }
+

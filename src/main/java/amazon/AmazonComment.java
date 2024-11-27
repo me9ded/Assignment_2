@@ -12,23 +12,28 @@ public class AmazonComment {
     public String toString() {
         return "Product ID: " + productId + ", Comment: " + text + ", Rating: " + rating;
     }
-}
 
-private static class Comment {
-    private int productId;
-    private String text;
-    private float rating;
-
-    public Comment(int productId, String text, float rating) {
-        this.productId = productId;
-        this.text = text;
+    public void setRating(float rating) {
         this.rating = rating;
     }
 
-    @Override
-    public String toString() {
-        return "Product ID: " + productId + ", Comment: " + text + ", Rating: " + rating;
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
-}
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public String getText() {
+        return text;
+    }
+    public float getRating() {
+        return rating;
+    }
 
 }

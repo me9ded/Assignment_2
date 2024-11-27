@@ -1,7 +1,7 @@
 package amazon;
 
-import amazon.AmazonProduct;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -11,19 +11,19 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestMethodOrder(OrderAnnotation.class)
-class TestWishlist {
+@TestMethodOrder(MethodOrderer.MethodName.class)
+class TestComments {
 
 	/**
 	 * Create products
 	 */
 	@Test
-    @Order(1)    
+	@Order(1)
 	public void test1CreateProducts() {
 		// Creating products
 		AmazonProduct ap;
 		String[] data;
-		System.out.println("[Test1.1: Creating products]...");
+		System.out.println("[Test4.1: Create products]...");
 		data = new String[] {};
 		ap = AmazonProduct.createAmazonProduct(data);
 		assertNull(ap);
@@ -35,15 +35,14 @@ class TestWishlist {
 		assertNotNull(ap);
 	}
 	
-
 	/**
 	 * Create users
 	 */
 	@Test
-    @Order(2)    
-	public void test2CreateUsers() {
+	@Order(2)
+	public void test2CreateConsumers() {
 		// Creating users
-		System.out.println("[Test1.2: Creating users]...");
+		System.out.println("[Test4.2: Create consumer]...");
 		AmazonCustomer customer;
 		String[] data;
 		data = new String[] { };
@@ -52,23 +51,23 @@ class TestWishlist {
 		data = new String[] { "Invalid user" };
 		customer = AmazonCustomer.createAmazonCustomer(data);
 		assertNull(customer);
-		data = new String[] { "1", "User1", "Address"};
+		data = new String[] { "1", "User1" , "Road A"};
 		customer = AmazonCustomer.createAmazonCustomer(data);
 		assertNotNull(customer);
 	}
-
 
 	/**
 	 * Create wish list
 	 */
 	@Test
-    @Order(3)
-	public void test3CreateWishList() {
-		System.out.println("[Test1.3: Creating wishlist]...");
+	@Order(3)
+	public void test3CreateCommentList() {
+		System.out.println("[Test4.3: Create comment...]");
 		AmazonProduct product;
 		AmazonCustomer customer;
+		AmazonComment comment;
 		List<AmazonProduct> productList = new ArrayList<AmazonProduct>();
-		List<AmazonCustomer> userList = new ArrayList<AmazonCustomer>();
+		List<AmazonCustomer> consumerList = new ArrayList<AmazonCustomer>();
 		String[] data;
 		// Creating products
 		data = new String[] { "1", "Prod1", "Cat1", "Subcat1", "Img1", "URL1", "1", "10", "1.1", "11.1" };
@@ -81,24 +80,30 @@ class TestWishlist {
 		product = AmazonProduct.createAmazonProduct(data);
 		productList.add(product);
 		// Creating users
-		data = new String[] { "1", "User1" };
+		data = new String[] { "1", "User1", "Address 1" };
 		customer = AmazonCustomer.createAmazonCustomer(data);
-		assertNull(customer);
-		data = new String[] { "2", "User2", "" };
-		assertNull(customer);
+		consumerList.add(customer);
+		data = new String[] { "2", "User2", "Address 2"  };
 		customer = AmazonCustomer.createAmazonCustomer(data);
-		data = new String[] { "3", "User3", "Address"};
+		consumerList.add(customer);
+		data = new String[] { "3", "User3", "Address 3"  };
 		customer = AmazonCustomer.createAmazonCustomer(data);
-		assertNotNull(customer);
-		userList.add(customer);
-		// Wishlists user 0
-		customer = userList.get(0);
+		consumerList.add(customer);
+		// Comments from user 0
+		customer = consumerList.get(0);
 		product = productList.get(0);
-		customer.addProductInWishList(product);
+		comment = new AmazonComment(product);
+		comment.setComment("Nice product");
+		comment.setRating(5.0f);
+		assertNotNull(comment);
+		customer.addComment(comment);
 		product = productList.get(1);
-		customer.addProductInWishList(product);
-		System.out.println("  * Number of wishlist from user 0: " + customer.getWishlistSize());
-		assertEquals(2, customer.getWishlistSize());
+		comment = new AmazonComment(product);
+		comment.setComment("Poor product");
+		comment.setRating(1.0f);
+		customer.addComment(comment);
+		System.out.println("  * Number of comments from user 0: " + customer.getNumberOfComments());
+		assertEquals(2, customer.getNumberOfComments());
 	}
 
 }

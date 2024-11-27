@@ -3,9 +3,9 @@ public class AmazonCartItem {
     private AmazonProduct product;
     private int quantity;
 
-    public AmazonCartItem(AmazonProduct ap, int b) {
+    public AmazonCartItem(AmazonProduct ap, int amount) {
         this.product = ap;
-        this.quantity = b;
+        this.quantity = amount;
     }
 
     public float calcSubTotal() {

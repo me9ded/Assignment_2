@@ -1,4 +1,5 @@
 package amazon;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.*;
@@ -7,16 +8,19 @@ import java.io.*;
 public class AmazonManager {
     private ArrayList<AmazonProduct> products = new ArrayList<>();
     private ArrayList<AmazonCustomer> customers = new ArrayList<>();
+    private ArrayList<AmazonCartItem> cart=new ArrayList<>();
     private Scanner scanner = new Scanner(System.in);
     private static final int NUMCOLS = 10;
 
 
-    public static void main(String[] args) {
+
+
+    public static void main(String[] args) throws AmazonException, FileNotFoundException {
         AmazonManager manager = new AmazonManager();
         manager.showMenu();
     }
 
-    public void showMenu() {
+    public void showMenu() throws AmazonException, FileNotFoundException {
         String option;
         do {
             System.out.println("===========================================================================");
@@ -87,13 +91,13 @@ public class AmazonManager {
                     showProductsFromCart();
                     break;
                 case "N":
-                    buyProductsFromCart();
+                    PayCart();
                     break;
                 case "O":
-                    commentProductsBought();
+                    addCommentToProduct();
                     break;
                 case "P":
-                    listCommentsFromProducts();
+                    showComments();
                     break;
                 case "Q":
                     System.out.println("===========================================================================");
@@ -106,42 +110,171 @@ public class AmazonManager {
         } while (!option.equals("Q"));
     }
 
+    private void showComments() {
+        System.out.println("Enter Customer ID: ");
+        int customerId = scanner.nextInt();
+        scanner.nextLine();
+        for (AmazonCustomer customer : customers) {
+            if(customer.getId()==customerId){
+                for(AmazonComment element: customer.getComments()){
+                    System.out.println("Comment from this customer" + element.toString());
+                }
+            }
+        }
+    }
+
     private void showProductsFromCart() {
+        System.out.println("Enter Customer ID: ");
+        int customerId = scanner.nextInt();
+        for(AmazonCustomer customer : customers) {
+            if(customer.getId()==customerId){
+                customer.showCart();
+            }
+        }
     }
 
     private void addProductInWishlist() {
+        System.out.println("Enter Customer ID: ");
+        int customerId = Integer.parseInt(scanner.nextLine());
+        System.out.println("Enter Product ID: ");
+        int productId = Integer.parseInt(scanner.nextLine());
+        for(AmazonProduct product : products) {
+            if(product.getId()==productId){
+                for(AmazonCustomer customer : customers) {
+                    if (customer.getId() == customerId) {
+                        customer.addProductInWishList(product);
+                        System.out.println("Added product in wishlist");
+                    }
+
+                }
+            }
+        }
 
     }
 
     private void removeProductFromWishlist() {
+        System.out.println("Enter Customer ID: ");
+        int customerId = Integer.parseInt(scanner.nextLine());
+        System.out.println("Enter Product ID: ");
+        int productId = Integer.parseInt(scanner.nextLine());
+        for(AmazonProduct product : products) {
+            if(product.getId()==productId){
+                for(AmazonCustomer customer : customers) {
+                    if (customer.getId() == customerId) {
+                        customer.removeProductFromWishList(productId);
+                        System.out.println("Removed product from wishlist");
+                    }
+
+                }
+            }
+        }
 
     }
     private void showProductsFromWishlist() {
+        System.out.println("Enter Customer ID: ");
+        int customerId = Integer.parseInt(scanner.nextLine());
+        for(AmazonCustomer customer : customers) {
+            if(customer.getId()==customerId){
+                customer.showWishList();
+            }
+        }
 
     }
     private void addProductInCart() {
+        System.out.println("Enter Product ID: ");
+        int productId = Integer.parseInt(scanner.nextLine());
+        System.out.println("Enter Customer ID: ");
+        int customerId = Integer.parseInt(scanner.nextLine());
+        System.out.println("Enter Quantity: ");
+        int quantity = Integer.parseInt(scanner.nextLine());
+        for(AmazonCustomer customer : customers) {
+            if(customer.getId()==customerId){
+                for (AmazonProduct product : products) {
+                    if (product.getId() == productId) {
+                        AmazonCartItem cartItem=new AmazonCartItem(product, quantity);
+                        customer.getCart().add(cartItem);
+                        System.out.println("Item has been added to the cart.");
+                    }
+
+                }
+            }
+        }
+
+
 
     }
     private void removeProductFromCart() {
+        System.out.println("Enter Product ID: ");
+        int productId = Integer.parseInt(scanner.nextLine());
+        System.out.println("Enter Customer ID: ");
+        int customerId = Integer.parseInt(scanner.nextLine());
+        for (AmazonCustomer customer : customers) {
+            if(customer.getId()==customerId){
+                for (AmazonProduct product : products) {
+                    if (product.getId() == productId) {
+                        customer.removeProductFromCart(productId);
+                        System.out.println("Item has been removed from the cart.");
+                    }
+                }
+            }
+        }
 
     }
 
-    private void buyProductsFromCart() {
+
+    private void PayCart() {
+        System.out.println("Enter Customer ID: ");
+        int customerId = Integer.parseInt(scanner.nextLine());
+        System.out.println("Select the payment method: ");
+        int paymentMethod =Integer.parseInt(scanner.nextLine());
+        for(AmazonCustomer customer : customers) {
+            if(customer.getId()==customerId){
+                customer.pay(customer.getCredits().get(paymentMethod).getValue());
+                System.out.println("Customer has been payed.");
+            }
+        }
+
 
     }
 
-    private void commentProductsBought() {
+
+    private void addCommentToProduct() {
+        System.out.println("Enter Customer ID: ");
+        int customerId = Integer.parseInt(scanner.nextLine());
+        System.out.println("Enter Product ID to comment: ");
+        int productId = Integer.parseInt(scanner.nextLine());
+        for (AmazonCustomer customer : customers) {
+            if(customer.getId()==customerId){
+                for (AmazonProduct product : products) {
+                    if (product.getId() == productId) {
+                        System.out.println("Commenting product: " + productId + product.getName());
+                        System.out.println("What is your feedback about this product ? ");
+                        String text=scanner.nextLine();
+                        System.out.println("How many stars you would rate it ?");
+                        float stars=Float.parseFloat(scanner.nextLine());
+                        AmazonComment comment= new AmazonComment(product);
+                        comment.setText(text);
+                        comment.setRating(stars);
+                        customer.getComments().add(comment);
+                        System.out.println("Comment has been added to the Product ratings.");
+                    }
+                }
+            }
+        }
 
     }
 
-    private void listCommentsFromProducts() {
-
-    }
 
     public void loadProductList() throws AmazonException, FileNotFoundException{
         System.out.println("Input the file name");
         String local_temp=scanner.nextLine();
-        FileReader fl= new FileReader(local_temp);
+        FileReader fl;
+        try{
+            fl= new FileReader(local_temp);
+
+        }catch(FileNotFoundException e) {
+            throw new AmazonException("Error file not found");
+        }
         try (BufferedReader br=new BufferedReader(fl)){
             String line=br.readLine();
             String[] title = line.split(",");
@@ -152,10 +285,6 @@ public class AmazonManager {
                     products.add(product);
                 }
             }
-
-        }catch(FileNotFoundException e) {
-            throw new AmazonException("Error file not found");
-
         }catch(IOException ae) {
             throw new AmazonException("Error in reading the file");
         }
@@ -197,7 +326,7 @@ public class AmazonManager {
         String address = scanner.nextLine();
         String[] data= {item,name,address};
         AmazonCustomer Az = null;
-        customers.add(Az.createAmazonCustomer(data));
+        customers.add(AmazonCustomer.createAmazonCustomer(data));
         System.out.println("Customer added successfully.");
     }
 
@@ -218,15 +347,42 @@ public class AmazonManager {
         for (AmazonCustomer customer : customers) {
             if (customer.getId() == customerId) {
                 System.out.print("Enter credit amount: ");
-                double amount = Double.parseDouble(scanner.nextLine());
+                float amount = Float.parseFloat(scanner.nextLine());
                 System.out.print("Enter payment method: ");
                 String paymentMethod = scanner.nextLine();
-                customer.addCredit(new AmazonCredit(amount, paymentMethod));
-                System.out.println("Credit added successfully.");
-                return;
+                AmazonCredit cash = null;
+                AmazonCredit card =null;
+                AmazonCredit check = null;
+                if (paymentMethod.equalsIgnoreCase("CASH")) {
+                    String[] data1 = {String.valueOf(amount)};
+                    cash = AmazonCash.createCash(data1);
+                    System.out.println("Cash added successfully.");
+                    customer.addCredit(cash);
+
+                }
+                if(paymentMethod.equalsIgnoreCase("CARD")) {
+                    System.out.println("Enter credit card number: ");
+                    String cardNumber = scanner.nextLine();
+                    System.out.println("Enter credit card expiration date: ");
+                    String expirationDate = scanner.nextLine();
+                    String[] data2={cardNumber,expirationDate, String.valueOf(amount)};
+                    card=AmazonCard.createCard(data2);
+                    System.out.println("Card added successfully.");
+                    customer.addCredit(card);
+
+                }
+                if(paymentMethod.equalsIgnoreCase("CHECK")) {
+                    System.out.println("Enter check number: ");
+                    String checkNumber = scanner.nextLine();
+                    String[] data3 = {checkNumber, String.valueOf(amount)};
+                    check=AmazonCheck.createCheck(data3);
+                    System.out.println("Check added successfully.");
+                    customer.addCredit(check);
+
+                }
             }
         }
-        System.out.println("Customer not found.");
+        return;
     }
 
     private void showCreditsFromCustomer() {
@@ -235,10 +391,8 @@ public class AmazonManager {
         for (AmazonCustomer customer : customers) {
             if (customer.getId() == customerId) {
                 customer.showCredits();
-                return;
             }
         }
-        System.out.println("Customer not found.");
     }
 
 }
