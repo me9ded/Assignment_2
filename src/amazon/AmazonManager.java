@@ -1,13 +1,11 @@
 package amazon;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class AmazonManager {
     private ArrayList<AmazonProduct> products = new ArrayList<>();
     private ArrayList<AmazonCustomer> customers = new ArrayList<>();
-    private ArrayList<AmazonWishlist> wishlists = new ArrayList<>();
-    private ArrayList<AmazonCart> carts = new ArrayList<>();
-    private ArrayList<String> comments = new ArrayList<>();
     private Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -18,30 +16,33 @@ public class AmazonManager {
     public void showMenu() {
         String option;
         do {
-            System.out.println("===========================================================================");
-            System.out.println("|| **** **** **** **** ***** ALGONQUIN COLLEGE                          ||");
-            System.out.println("|| ** ** ** ** ** ** ** ** ** ** COURSE: OOP/CST8152                   ||");
-            System.out.println("|| ****** ** ** ** ** ** ** ***** PROF: PAULO                          ||");
-            System.out.println("|| ** ** **** **** **** ** TERM: FALL / 2024                           ||");
-            System.out.println("===========================================================================");
-            System.out.println("|| [Menu A2 - Amazon Manager]                                           ||");
-            System.out.println("===========================================================================");
-            System.out.println("||                                 USER                                 ||");
-            System.out.println("|| ADMIN                         || [F] Add credit to customer          ||");
-            System.out.println("||                                || [G] Show credits from customer     ||");
-            System.out.println("|| Product options                || Wishlist options                   ||");
-            System.out.println("|| [A] Load product list          || [H] Add product in wishlist        ||");
-            System.out.println("|| [B] Show product list          || [I] Remove product from wishlist   ||");
-            System.out.println("|| [C] Search products            || [J] Show products from wishlist    ||");
-            System.out.println("||                                || Cart options                       ||");
-            System.out.println("|| Customer options               || [K] Add product in cart            ||");
-            System.out.println("|| [D] Add customer               || [L] Remove product from cart       ||");
-            System.out.println("|| [E] Show customers             || [M] Show products from cart        ||");
-            System.out.println("||                                || [N] Buy products from cart         ||");
-            System.out.println("||                                || Comment options                    ||");
-            System.out.println("|| ................................|| [O] Comment products bought       ||");
-            System.out.println("|| [Q] Exit                       || [P] List comments from products    ||");
-            System.out.println("===========================================================================");
+   
+        	        System.out.println("===========================================================================");
+        	        System.out.println("||   ****    ****         ****      ****   *****      ALGONQUIN COLLEGE  ||");
+        	        System.out.println("||  **  **  **      **   **  **    **  **  **  **  COURSE: OOP / CST8152 ||");
+        	        System.out.println("||  ******  **      **   **  **    **  **  *****    PROF: PAULO          ||");
+        	        System.out.println("||  **  **   ****         ****      ****   **       TERM: FALL / 2024    ||");
+        	        System.out.println("===========================================================================");
+        	        System.out.println("||                      [Menu A2 - Amazon Manager]                       ||");
+        	        System.out.println("===========================================================================");
+        	        System.out.println("|| ADMIN                          || USER                                ||");
+        	        System.out.println("|| Credit options.................|| Credit options......................||");
+        	        System.out.println("|| [F] Add credit to customer     || [G] Show credits from customer      ||");
+        	        System.out.println("|| Product options................|| Wishlist options....................||");
+        	        System.out.println("|| [A] Load product list          || [H] Add product in wishlist         ||");
+        	        System.out.println("|| [B] Show product list          || [I] Remove product from wishlist    ||");
+        	        System.out.println("|| [C] Search products            || [J] Show products from wishlist     ||");
+        	        System.out.println("||                                || Cart options........................||");
+        	        System.out.println("|| Customer options...............|| [K] Add product in cart             ||");
+        	        System.out.println("|| [D] Add customer               || [L] Remove product from cart        ||");
+        	        System.out.println("|| [E] Show customers             || [M] Show products from cart         ||");
+        	        System.out.println("||                                || [N] Buy products from cart          ||");
+        	        System.out.println("||                                || Comment options.....................||");
+        	        System.out.println("|| ...............................|| [O] Comment products bought         ||");
+        	        System.out.println("|| [Q] Exit                       || [P] List comments from products     ||");
+        	        System.out.println("===========================================================================");
+        	   
+
             System.out.print("Choose an option: ");
             option = scanner.nextLine().toUpperCase();
 
@@ -76,28 +77,10 @@ public class AmazonManager {
                 case "J":
                     showProductsFromWishlist();
                     break;
-                case "K":
-                    addProductInCart();
-                    break;
-                case "L":
-                    removeProductFromCart();
-                    break;
-                case "M":
-                    showProductsFromCart();
-                    break;
-                case "N":
-                    buyProductsFromCart();
-                    break;
-                case "O":
-                    commentProductsBought();
-                    break;
-                case "P":
-                    listCommentsFromProducts();
-                    break;
                 case "Q":
-                    System.out.println("===========================================================================");
-                    System.out.println("|| [End of Application (Authors: Paulo Sousa)]                          ||");
-                    System.out.println("===========================================================================");
+                    System.out.println("==============================================================================================");
+                    System.out.println("|| [End of Application (Authors: Fouzi Haidar, Mohamed Amine Jmal)]                          ||");
+                    System.out.println("===============================================================================================");
                     break;
                 default:
                     System.out.println("Invalid option! Please try again.");
@@ -106,7 +89,6 @@ public class AmazonManager {
     }
 
     private void loadProductList() {
-        // Example of loading products
         products.add(new AmazonProduct(1, "Laptop", "Electronics", 1200.00));
         products.add(new AmazonProduct(2, "Headphones", "Electronics", 150.00));
         System.out.println("Product list loaded successfully.");
@@ -145,8 +127,7 @@ public class AmazonManager {
         String name = scanner.nextLine();
         System.out.print("Enter customer address: ");
         String address = scanner.nextLine();
-        AmazonCustomer Az = null;
-        customers.add(Az.createAmazonCustomer(id, name, address));
+        customers.add(new AmazonCustomer(id, name, address));
         System.out.println("Customer added successfully.");
     }
 
@@ -166,11 +147,11 @@ public class AmazonManager {
         int customerId = Integer.parseInt(scanner.nextLine());
         for (AmazonCustomer customer : customers) {
             if (customer.getId() == customerId) {
+                System.out.print("Enter payment method (cash/check/card): ");
+                String paymentMethod = scanner.nextLine();
                 System.out.print("Enter credit amount: ");
                 double amount = Double.parseDouble(scanner.nextLine());
-                System.out.print("Enter payment method: ");
-                String paymentMethod = scanner.nextLine();
-                customer.addCredit(new AmazonCredit(amount, paymentMethod));
+                customer.addCredit(paymentMethod, amount);
                 System.out.println("Credit added successfully.");
                 return;
             }
@@ -190,5 +171,45 @@ public class AmazonManager {
         System.out.println("Customer not found.");
     }
 
-    // Other methods for wishlist, cart, and comments can follow a similar pattern.
+    private void addProductInWishlist() {
+        System.out.print("Enter customer ID: ");
+        int customerId = Integer.parseInt(scanner.nextLine());
+        System.out.print("Enter product ID to add to wishlist: ");
+        int productId = Integer.parseInt(scanner.nextLine());
+        for (AmazonCustomer customer : customers) {
+            if (customer.getId() == customerId) {
+                customer.addProductInWishList(productId);
+                System.out.println("Product added to wishlist.");
+                return;
+            }
+        }
+        System.out.println("Customer not found.");
+    }
+
+    private void removeProductFromWishlist() {
+        System.out.print("Enter customer ID: ");
+        int customerId = Integer.parseInt(scanner.nextLine());
+        System.out.print("Enter product ID to remove from wishlist: ");
+        int productId = Integer.parseInt(scanner.nextLine());
+        for (AmazonCustomer customer : customers) {
+            if (customer.getId() == customerId) {
+                customer.removeProductFromWishList(productId);
+                System.out.println("Product removed from wishlist.");
+                return;
+            }
+        }
+        System.out.println("Customer not found.");
+    }
+
+    private void showProductsFromWishlist() {
+        System.out.print("Enter customer ID: ");
+        int customerId = Integer.parseInt(scanner.nextLine());
+        for (AmazonCustomer customer : customers) {
+            if (customer.getId() == customerId) {
+                customer.showWishList();
+                return;
+            }
+        }
+        System.out.println("Customer not found.");
+    }
 }

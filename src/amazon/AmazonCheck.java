@@ -1,24 +1,15 @@
 package amazon;
-public class AmazonCheck extends AmazonCredit{
-    private CreditType creditType;
+
+public class AmazonCheck extends AmazonCredit {
     private String accountNumber;
 
-    private AmazonCheck(String accountNumber, float amount) {
-        super(amount);
+    public AmazonCheck(String accountNumber, float amount) {
+        super(PaymentType.Check, amount);
         this.accountNumber = accountNumber;
-    }
-
-    public AmazonCheck createAmazonCheck(String[] data) {
-        if(data.){
-            return null;
-        }
-        return new AmazonCheck(accountNumber);
     }
 
     @Override
     public String toString() {
-        String ret="";
-        ret="Credit Type" + creditType. + "Account Number" + accountNumber;
-        return ret;
+        return "AmazonCheck{accountNumber='" + accountNumber + "', amount=" + getAmount() + '}';
     }
 }

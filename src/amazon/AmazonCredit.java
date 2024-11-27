@@ -1,36 +1,32 @@
 package amazon;
 
 public abstract class AmazonCredit {
-	public enum CreditType {
-		CASH, CHECK, CREDIT
-	}
+    public enum PaymentType { Cash, Check, Card }
 
-	protected CreditType creditType;
-	protected float value;
+    private PaymentType type;
+    private float amount;
 
-	// Constructor
-	public AmazonCredit(CreditType creditType, float value) {
-		if (creditType == null || value < 0) {
-			throw new IllegalArgumentException("Invalid credit type or value");
-		}
-		this.creditType = creditType;
-		this.value = value;
-	}
+    public AmazonCredit(PaymentType type, float amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Amount must be positive");
+        }
+        this.type = type;
+        this.amount = amount;
+    }
 
-	// Getter for value
-	public float getValue() {
-		return value;
-	}
+    public float getAmount() {
+        return amount;
+    }
 
-	// Deduct value from credit
-	public void deduct(float amount) {
-		if (amount > value) {
-			throw new IllegalArgumentException("Insufficient credit balance");
-		}
-		value -= amount;
-	}
+    public void deductAmount(float value) {
+        if (value > amount) {
+            throw new IllegalArgumentException("Insufficient funds");
+        }
+        this.amount -= value;
+    }
 
-	// Abstract method toString
-	@Override
-	public abstract String toString();
+    @Override
+    public String toString() {
+        return "AmazonCredit{" + "type=" + type + ", amount=" + amount + '}';
+    }
 }

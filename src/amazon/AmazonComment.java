@@ -1,17 +1,25 @@
 package amazon;
+
 public class AmazonComment {
-    private String comment;
-    private AmazonProduct amazonProduct;
+    private AmazonProduct product;
+    private String text;
     private float rating;
 
-    public AmazonComment(AmazonProduct amazonProduct){
-        this.amazonProduct = amazonProduct;
+    public AmazonComment(AmazonProduct product, String text, float rating) {
+        if (rating < 0 || rating > 5) {
+            throw new IllegalArgumentException("Rating must be between 0 and 5");
+        }
+        this.product = product;
+        this.text = text;
+        this.rating = rating;
+    }
+
+    public AmazonProduct getProduct() {
+        return product;
     }
 
     @Override
     public String toString() {
-        String ret="";
-        ret="Description of this item" + comment + " And it's rating is " + rating;
-        return ret;
+        return "AmazonComment{product=" + product + ", text='" + text + "', rating=" + rating + '}';
     }
 }

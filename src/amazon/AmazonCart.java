@@ -1,30 +1,52 @@
 package amazon;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AmazonCart {
     private AmazonCustomer customer;
-    private ArrayList<AmazonCartItem> items;
+    private List<AmazonCartItem> items = new ArrayList<>();
     private float totalValue;
 
-    public AmazonCart(AmazonCustomer amazonCustomer){
-        this.customer=amazonCustomer;
+    public AmazonCart(AmazonCustomer customer) {
+        this.customer = customer;
     }
 
-    public float calcSubTotal(){
-        float total=0;
-        for(AmazonCartItem element : items){
-            total+=element.calcSubTotal();
+    public void addItem(AmazonCartItem item) {
+        items.add(item);
+        calcSubTotal();
+    }
+
+    public void removeItem(AmazonProduct product) {
+        items.removeIf(item -> item.getProduct().equals(product));
+        calcSubTotal();
+    }
+
+    public void calcSubTotal() {
+        totalValue = (float) items.stream().mapToDouble(item -> item.getProduct().getActualPrice() * item.getQuantity()).sum();
+    }
+
+    public void showCart() {
+        if (items.isEmpty()) {
+            System.out.println("Cart is empty.");
+        } else {
+            items.forEach(System.out::println);
         }
-        return total;
     }
 
-    public AmazonCartItem getItem(int position){
-        if(position<0 || position>=items.size()){
-            return null;
+    public boolean pay(AmazonCredit credit) {
+        if (credit.getAmount() >= totalValue) {
+            credit.deductAmount(totalValue);
+            return true;
         }
-        return items.get(position);
+        return false;
     }
 
+    public List<AmazonCartItem> getItems() {
+        return items;
+    }
 
+    public void clear() {
+        items.clear();
+    }
 }

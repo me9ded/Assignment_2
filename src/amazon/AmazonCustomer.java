@@ -7,101 +7,102 @@ public class AmazonCustomer {
     private int id;
     private String name;
     private String address;
-    private List<String> credits = new ArrayList<>();
-    private List<Integer> wishList = new ArrayList<>();
-    private List<CartItem> cart = new ArrayList<>();
-    private List<Comment> comments = new ArrayList<>();
+    private List<AmazonComment> comments = new ArrayList<>();
+    private List<AmazonProduct> wishlist = new ArrayList<>();
+    private List<AmazonCredit> credits = new ArrayList<>();
+    private AmazonCart cart;
 
+    // Constructor (private)
     private AmazonCustomer(int id, String name, String address) {
+        if (id <= 0 || name == null || name.isEmpty() || address == null || address.isEmpty()) {
+            throw new IllegalArgumentException("Invalid customer data");
+        }
         this.id = id;
         this.name = name;
         this.address = address;
+        this.cart = new AmazonCart(this); // Initialize cart
     }
 
     public static AmazonCustomer createAmazonCustomer(List<String> data) {
         if (data == null || data.size() < 3) {
             throw new IllegalArgumentException("Invalid data provided");
         }
-
-        int id = Integer.parseInt(data.get(0));
+        int id = Integer.parseInt(data.get(0).trim());
         String name = data.get(1).trim();
         String address = data.get(2).trim();
 
         return new AmazonCustomer(id, name, address);
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void addCredit(String type, float amount) {
-        if (amount <= 0 || (!type.equalsIgnoreCase("cash") && !type.equalsIgnoreCase("check") && !type.equalsIgnoreCase("card"))) {
-            throw new IllegalArgumentException("Invalid credit type or amount");
+    public void addCredit(AmazonCredit credit) {
+        if (credit == null) {
+            throw new IllegalArgumentException("Invalid credit");
         }
-        credits.add(type + ": $" + amount);
+        credits.add(credit);
     }
 
     public void showCredits() {
         if (credits.isEmpty()) {
-            System.out.println("No credits added.");
+            System.out.println("No credits available.");
         } else {
             credits.forEach(System.out::println);
         }
     }
 
-    public void addProductInWishList(int productId) {
-        if (!wishList.contains(productId)) {
-            wishList.add(productId);
+    public void addProductToWishList(AmazonProduct product) {
+        if (product != null && !wishlist.contains(product)) {
+            wishlist.add(product);
         }
     }
 
-    public void removeProductFromWishList(int productId) {
-        wishList.remove(Integer.valueOf(productId));
+    public void removeProductFromWishList(AmazonProduct product) {
+        wishlist.remove(product);
     }
 
     public void showWishList() {
-        if (wishList.isEmpty()) {
+        if (wishlist.isEmpty()) {
             System.out.println("Wishlist is empty.");
         } else {
-            System.out.println("Wishlist: " + wishList);
+            wishlist.forEach(System.out::println);
         }
     }
 
-    public void addItemInCart(int productId, int quantity) {
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be positive");
-        }
-        cart.add(new CartItem(productId, quantity));
+    public void addItemInCart(AmazonProduct product, int quantity) {
+        cart.addItem(new AmazonCartItem(product, quantity));
     }
 
-    public void removeProductFromCart(int productId) {
-        cart.removeIf(item -> item.getProductId() == productId);
+    public void removeProductFromCart(AmazonProduct product) {
+        cart.removeItem(product);
     }
 
     public void showCart() {
-        if (cart.isEmpty()) {
-            System.out.println("Cart is empty.");
+        cart.showCart();
+    }
+
+    public void pay(AmazonCredit credit) {
+        if (!cart.pay(credit)) {
+            System.out.println("Insufficient funds. Payment failed.");
         } else {
-            cart.forEach(System.out::println);
+            moveFromCartToComments();
         }
     }
 
-    public void pay(float availableCredit) {
-        float total = cart.stream().mapToDouble(item -> item.getQuantity() * 10.0).sum();
-        if (availableCredit < total) {
-            System.out.println("Insufficient credit. Payment failed.");
-        } else {
-            System.out.println("Payment successful. Moving products to comments.");
-            cart.forEach(item -> comments.add(new Comment(item.getProductId(), "Purchased successfully", 5.0f)));
-            cart.clear();
-        }
+    public void moveFromCartToComments() {
+        cart.getItems().forEach(item -> {
+            comments.add(new AmazonComment(item.getProduct(), "Purchased successfully", 5.0f));
+        });
+        cart.clear();
     }
 
-    public void addComment(int productId, String commentText, float rating) {
-        if (rating < 0 || rating > 5) {
-            throw new IllegalArgumentException("Rating must be between 0 and 5");
+    public boolean hasProductToComment(AmazonProduct product) {
+        return comments.stream().anyMatch(comment -> comment.getProduct().equals(product));
+    }
+
+    public void setComment(AmazonProduct product, String text, float rating) {
+        if (!hasProductToComment(product)) {
+            throw new IllegalArgumentException("Product not purchased");
         }
-        comments.add(new Comment(productId, commentText, rating));
+        comments.add(new AmazonComment(product, text, rating));
     }
 
     public void showComments() {
@@ -114,46 +115,10 @@ public class AmazonCustomer {
 
     @Override
     public String toString() {
-        return "Customer ID: " + id + ", Name: " + name + ", Address: " + address;
-    }
-
-    private static class CartItem {
-        private int productId;
-        private int quantity;
-
-        public CartItem(int productId, int quantity) {
-            this.productId = productId;
-            this.quantity = quantity;
-        }
-
-        public int getProductId() {
-            return productId;
-        }
-
-        public int getQuantity() {
-            return quantity;
-        }
-
-        @Override
-        public String toString() {
-            return "Product ID: " + productId + ", Quantity: " + quantity;
-        }
-    }
-
-    private static class Comment {
-        private int productId;
-        private String text;
-        private float rating;
-
-        public Comment(int productId, String text, float rating) {
-            this.productId = productId;
-            this.text = text;
-            this.rating = rating;
-        }
-
-        @Override
-        public String toString() {
-            return "Product ID: " + productId + ", Comment: " + text + ", Rating: " + rating;
-        }
+        return "AmazonCustomer{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                '}';
     }
 }

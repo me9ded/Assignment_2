@@ -1,5 +1,5 @@
 package amazon;
-public class AmazonProduct extends AmazonProductUtil{
+public class AmazonProduct extends AmazonUtil{
 	private String name;
 	private String imageURL;
 	private String link;
