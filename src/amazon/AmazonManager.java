@@ -18,10 +18,10 @@ public class AmazonManager {
         do {
    
         	        System.out.println("===========================================================================");
-        	        System.out.println("||   ****    ****         ****      ****   *****      ALGONQUIN COLLEGE  ||");
-        	        System.out.println("||  **  **  **      **   **  **    **  **  **  **  COURSE: OOP / CST8152 ||");
-        	        System.out.println("||  ******  **      **   **  **    **  **  *****    PROF: PAULO          ||");
-        	        System.out.println("||  **  **   ****         ****      ****   **       TERM: FALL / 2024    ||");
+        	        System.out.println("||   ****    ****         ****    ****   *****      ALGONQUIN COLLEGE    ||");
+        	        System.out.println("||  **  **  **      **   **  **  **  **  **  **  COURSE: OOP / CST8152   ||");
+        	        System.out.println("||  ******  **      **   **  **  **  **  *****    PROF: PAULO            ||");
+        	        System.out.println("||  **  **   ****         ****    ****   **       TERM: FALL / 2024      ||");
         	        System.out.println("===========================================================================");
         	        System.out.println("||                      [Menu A2 - Amazon Manager]                       ||");
         	        System.out.println("===========================================================================");
@@ -78,9 +78,9 @@ public class AmazonManager {
                     showProductsFromWishlist();
                     break;
                 case "Q":
-                    System.out.println("==============================================================================================");
-                    System.out.println("|| [End of Application (Authors: Fouzi Haidar, Mohamed Amine Jmal)]                          ||");
-                    System.out.println("===============================================================================================");
+                    System.out.println("===========================================================================");
+                    System.out.println("||    [End of Application (Authors: Fouzi Haidar, Mohamed Amine Jmal)]   ||");
+                    System.out.println("===========================================================================");
                     break;
                 default:
                     System.out.println("Invalid option! Please try again.");
