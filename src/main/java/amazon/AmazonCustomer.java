@@ -26,11 +26,19 @@ public class AmazonCustomer {
         if (data.length !=3) {
             return null;
         }
+        Integer id = null;
 
-        int id = Integer.parseInt(data[0]);
+        try{
+            id = Integer.parseInt(data[0]);
+
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid id: " + data[0]);
+        }
         String name = data[1].trim();
         String address = data[2].trim();
-
+        if(id==null){
+            return null;
+        }
         return new AmazonCustomer(id, name, address);
     }
 
@@ -59,7 +67,7 @@ public class AmazonCustomer {
 
     public void showWishList() {
         if (wishList.isEmpty()) {
-            System.out.println("Wishlist is empty.");
+            System.err.println("Wishlist is empty.");
         } else {
             System.out.println("Wishlist: " + wishList);
         }
@@ -78,7 +86,7 @@ public class AmazonCustomer {
 
     public void showCart() {
         if (cart.isEmpty()) {
-            System.out.println("Cart is empty.");
+            System.err.println("Cart is empty.");
         } else {
             cart.forEach(System.out::println);
         }
@@ -87,7 +95,7 @@ public class AmazonCustomer {
     public void pay(float availableCredit) {
         float total = (float) cart.stream().mapToDouble(item -> item.getQuantity() * 10.0).sum();
         if (availableCredit < total) {
-            System.out.println("Insufficient credit. Payment failed.");
+            System.err.println("Insufficient credit. Payment failed.");
         } else {
             System.out.println("Payment successful. Moving products to comments.");
             cart.clear();
@@ -121,7 +129,7 @@ public class AmazonCustomer {
 
     public void showComments() {
         if (comments.isEmpty()) {
-            System.out.println("No comments available.");
+            System.err.println("No comments available.");
         } else {
             comments.forEach(System.out::println);
         }

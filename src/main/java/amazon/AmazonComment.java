@@ -21,7 +21,7 @@ public class AmazonComment {
         this.productId = productId;
     }
 
-    public void setText(String text) {
+    public void setComment(String text) {
         this.text = text;
     }
 
